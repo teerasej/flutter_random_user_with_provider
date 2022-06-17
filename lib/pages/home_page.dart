@@ -17,12 +17,34 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: ListView.builder(
-        itemCount: userModel.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text('...'),
-          );
+      body: FutureBuilder(
+        future: provider.loadRandomUser(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<UserModel>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            var userList = snapshot.data;
+
+            return ListView.builder(
+              itemCount: userList?.length,
+              itemBuilder: (BuildContext context, int index) {
+                var user = userList![index];
+
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(user.pictureUrl),
+                  ),
+                  title: Text(user.name),
+                  subtitle: Text(user.phone),
+                  onTap: () {
+                    provider.selectedUser = user;
+                    Navigator.pushNamed(context, '/detail');
+                  },
+                );
+              },
+            );
+          }
+
+          return CircularProgressIndicator();
         },
       ),
     );
