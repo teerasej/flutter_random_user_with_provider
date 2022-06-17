@@ -6,12 +6,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) {
-        return RandomUserProvider();
-      },
-      child: const MyApp(),
-    ),
+    const MyApp(),
   );
 }
 
